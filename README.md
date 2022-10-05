@@ -1,6 +1,6 @@
 # discord.js-button-controller-v14
 
-![Discord.js Button Controller](https://i.imgur.com/a/weXYdjV.gif)
+![Discord.js Button Controller](https://i.imgur.com/weXYdjV.gif)
 
 ## Install
 
