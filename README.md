@@ -1,44 +1,36 @@
-# discord.js-reaction-controller
+# discord.js-button-controller-v14
 
-[![Scrapbox](https://img.shields.io/badge/Scrapbox-docs-green)](https://scrapbox.io/discordjs-japan/リアクションを使って簡単にページネーションを作成するDiscord.js専用のパッケージ)
-
-![Discord.js Reaction Controller](https://i.imgur.com/JOJJZF6.gif)
+![Discord.js Button Controller](https://i.imgur.com/a/weXYdjV.gif)
 
 ## Install
 
 ### Requirements
 
-- Discord.js v12.2.0 or later
+- Discord.js v14.0.0 or later
 
 ### NPM
 
 ```bash
-npm install discord.js-reaction-controller
+npm install discord.js-button-controller-v14
 ```
 
 ### Yarn
 
 ```bash
-yarn add discord.js-reaction-controller
+yarn add discord.js-button-controller-v14
 ```
 
 ## Example of usage
 
 ```js
-const Discord = require('discord.js')
-const { ReactionController } = require('discord.js-reaction-controller')
+const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js")
+const { ButtonController } = require("discord.js-button-controller-v14")
 
-const client = new Discord.Client()
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
-client.on('message', message => {
+client.on("messageCreate", (message) => {
   if (message.content.startsWith('>pagination')) {
-    const controller = new ReactionController(client)
-
-    controller
-      .addReactionHandler('🤔', (reaction) => {
-        reaction.message.channel.send('thinking')
-          .catch(console.error)
-      })
+    const controller = new ButtonController(client)
 
     controller.addPages([
       new EmbedBuilder().setImage('https://github.com/yyx990803.png'),
@@ -51,7 +43,7 @@ client.on('message', message => {
     controller.sendTo(message.channel, message.author)
       .catch(console.error)
   }
-})
+});
 
 client.login()
   .catch(console.error)
@@ -64,23 +56,23 @@ It is recommended to create a function that returns MessageEmbed with Promise an
 That way, "discord.js-reaction-controller" will resolve the promises as needed and cache and display the MessageEmbed.
 
 ```js
-const { Client, MessageEmbed } = require('discord.js')
-const { ReactionController } = require('discord.js-reaction-controller')
+const { Client, EmbedBuilder } = require('discord.js')
+const { ButtonController } = require('discord.js-button-controller-v14')
 const { getBasicInfo } = require('ytdl-core')
 
-const client = new Client()
+const client = new Client(/* Please make sure intents */)
 
-const fetchYouTubeVideoInfo = videoUrl => async () => {
+const fetchYouTubeVideoInfo = (videoUrl) => async () => {
   const { videoDetails } = await getBasicInfo(videoUrl)
 
-  return new MessageEmbedBuilder()
+  return new EmbedBuilder()
     .setColor('RED')
     .setTitle(videoDetails.title)
     .setURL(videoDetails.video_url)
     .setImage(videoDetails.thumbnails[videoDetails.thumbnails.length - 1].url)
     .setTimestamp(Date.parse(videoDetails.publishDate))
-    .setFooter('Uploaded on')
-    .setAuthor(videoDetails.author.name, videoDetails.author.thumbnails[0].url, videoDetails.author.channel_url)
+    .setFooter({ text: 'Uploaded on' })
+    .setAuthor({ name: videoDetails.author.name, icon_url: videoDetails.author.thumbnails[0].url, url: videoDetails.author.channel_url })
 }
 
 
@@ -94,15 +86,9 @@ const videos = [
   'https://youtu.be/308I91ljCWg'
 ]
 
-client.on('message', message => {
+client.on('messageCreate', (message) => {
   if (message.content.startsWith('>pagination')) {
-    const controller = new ReactionController(client)
-
-    controller
-      .addReactionHandler('🤔', (reaction) => {
-        reaction.message.channel.send('thinking')
-          .catch(console.error)
-      })
+    const controller = new ButtonController(client)
 
     controller.addPages(videos.map(url => fetchYouTubeVideoInfo(url)))
 
