@@ -41,11 +41,11 @@ client.on('message', message => {
       })
 
     controller.addPages([
-      new Discord.MessageEmbed().setImage('https://github.com/yyx990803.png'),
-      new Discord.MessageEmbed().setImage('https://github.com/egoist.png'),
-      new Discord.MessageEmbed().setImage('https://github.com/vercel.png'),
-      new Discord.MessageEmbed().setImage('https://github.com/Google.png'),
-      new Discord.MessageEmbed().setImage('https://github.com/Microsoft.png')
+      new EmbedBuilder().setImage('https://github.com/yyx990803.png'),
+      new EmbedBuilder().setImage('https://github.com/egoist.png'),
+      new EmbedBuilder().setImage('https://github.com/vercel.png'),
+      new EmbedBuilder().setImage('https://github.com/Google.png'),
+      new EmbedBuilder().setImage('https://github.com/Microsoft.png')
     ])
 
     controller.sendTo(message.channel, message.author)
@@ -73,7 +73,7 @@ const client = new Client()
 const fetchYouTubeVideoInfo = videoUrl => async () => {
   const { videoDetails } = await getBasicInfo(videoUrl)
 
-  return new MessageEmbed()
+  return new MessageEmbedBuilder()
     .setColor('RED')
     .setTitle(videoDetails.title)
     .setURL(videoDetails.video_url)
